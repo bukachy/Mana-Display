@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.mtechlab.manadisplay.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "manadisplay.refmap.json",
+  "mixins": [
+    "FlowersWandHudMixin",
+    "HUDHandlerMixin",
+    "ItemManaDisplay",
+    "ManaSpreaderBlockEntityAccessor",
+    "PoolWandHudMixin",
+    "SpreaderWandHudMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -34,7 +34,7 @@ public abstract class FlowersWandHudMixin {
         RenderHelper.renderHUDBox(gui,
                 centerX - left,
                 centerY - 4,
-                centerX + left,
+                centerX + left + 20,
                 centerY + 30
         );
 

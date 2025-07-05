@@ -1,11 +1,10 @@
 package dev.mtechlab.manadisplay.mixins;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,7 +25,7 @@ public class SpreaderWandHudMixin {
     private ManaSpreaderBlockEntity spreader;
 
     @Inject(method = "renderHUD", at = @At("HEAD"), cancellable = true, remap = false)
-    public void mana_display$renderHUD(PoseStack ms, Minecraft mc, CallbackInfo ci) {
+    public void mana_display$renderHUD(GuiGraphics gui, Minecraft mc, CallbackInfo ci) {
 
         if(spreader instanceof ManaSpreaderBlockEntityAccessor mtechlab_spreader){
             String spreaderName = (new ItemStack(this.spreader.getBlockState().getBlock())).getHoverName().getString();
@@ -36,11 +35,11 @@ public class SpreaderWandHudMixin {
             int height = 22 + (lensStack.isEmpty() ? 0 : 18) + (recieverStack.isEmpty() ? 0 : 18);
             int centerX = mc.getWindow().getGuiScaledWidth() / 2;
             int centerY = mc.getWindow().getGuiScaledHeight() / 2;
-            RenderHelper.renderHUDBox(ms, centerX - width / 2, centerY - 5, centerX + width / 2, centerY + 8 + height);
+            RenderHelper.renderHUDBox(gui, centerX - width / 2, centerY - 5, centerX + width / 2, centerY + 8 + height);
             int color = this.spreader.getVariant().hudColor;
-            BotaniaAPIClient.instance().drawSimpleManaHUD(ms, color, this.spreader.getCurrentMana(), this.spreader.getMaxMana(), spreaderName);
-            RenderHelper.renderItemWithNameCentered(ms, mc, recieverStack, centerY + 30, color);
-            RenderHelper.renderItemWithNameCentered(ms, mc, lensStack, centerY + (recieverStack.isEmpty() ? 30 : 48), color);
+            BotaniaAPIClient.instance().drawSimpleManaHUD(gui, color, this.spreader.getCurrentMana(), this.spreader.getMaxMana(), spreaderName);
+            RenderHelper.renderItemWithNameCentered(gui, mc, recieverStack, centerY + 30, color);
+            RenderHelper.renderItemWithNameCentered(gui, mc, lensStack, centerY + (recieverStack.isEmpty() ? 30 : 48), color);
         }
 
         ci.cancel();

@@ -2,8 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "dev.mtechlab.manadisplay.mixins",
-  "compatibilityLevel": "JAVA_8",
-  "refmap": "manadisplay.refmap.json",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "FlowersWandHudMixin",
     "HUDHandlerMixin",
@@ -16,5 +15,8 @@
   ],
   "injectors": {
     "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
   }
 }

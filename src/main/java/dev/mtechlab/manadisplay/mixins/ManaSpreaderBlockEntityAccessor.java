@@ -10,5 +10,4 @@ public interface ManaSpreaderBlockEntityAccessor {
 
     @Accessor(value = "receiver", remap = false)
     ManaReceiver getReceiver();
-
 }

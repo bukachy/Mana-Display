@@ -5,11 +5,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import vazkii.botania.api.mana.ManaItem;
 import vazkii.botania.common.item.ManaTabletItem;
 import vazkii.botania.common.item.equipment.bauble.BaubleItem;
@@ -24,15 +24,28 @@ public abstract class ItemManaDisplay extends Item {
         super(properties);
     }
 
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
-        super.appendHoverText(stack, level, tooltip, flag);
-
+    @Inject(
+            method = "appendHoverText",
+            at = @At("TAIL")
+    )
+    private void onAppendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag, CallbackInfo ci) {
         ManaItem manaItem = XplatAbstractions.INSTANCE.findManaItem(stack);
 
-        if (manaItem != null && !ManaTabletItem.isStackCreative(stack)) {
-            tooltip.add(mana_display$manaLevel(manaItem.getMana(), manaItem.getMaxMana()).copy().withStyle(ChatFormatting.AQUA));
+        if (manaItem == null) return;
+
+        if (stack.getItem() instanceof ManaTabletItem) {
+            if (!ManaTabletItem.isStackCreative(stack)) {
+                mana_Display$addManaTooltip(tooltipComponents, manaItem);
+            }
+        } else {
+            mana_Display$addManaTooltip(tooltipComponents, manaItem);
         }
+    }
+
+    @Unique
+    private void mana_Display$addManaTooltip(List<Component> tooltipComponents, ManaItem manaItem) {
+        tooltipComponents.add(mana_display$manaLevel(manaItem.getMana(), manaItem.getMaxMana())
+                .copy().withStyle(ChatFormatting.AQUA));
     }
 
     @Unique
